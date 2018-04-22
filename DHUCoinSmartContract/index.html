@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+	<script src="./node_modules/web3/dist/web3.min.js"></script>
+	<script src="javascript/functions.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+	<div class="container">
+
+		<h1>DHUCoin Admin Page</h1>
+		<span id="countIns"></span>
+
+		<h2 id="transactionResult"></h2>
+		<div>
+			<span id="insTrans"></span>
+		</div>
+		<span id="transBlock"></span>
+		<hr>
+
+		<img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+
+		<div>
+			<label for="toVerifyAdd" class="col-lg-2 control-label">Enter an address to verify</label>
+			<input id="toVerifyAdd" type="text">
+
+			<button id="btnVerify">Verify Address</button>
+
+		</div>
+		
+		<div>
+			<label for="addToRemove" class="col-lg-2 control-label">Enter an address to invalidate</label>
+			<input id="addToRemove" type="text">
+
+			<button id="btnRemoveAdd">Invalidate address</button>
+
+		</div>
+
+		<div>
+			<label for="addToChk" class="col-lg-2 control-label">Enter an address to check the verification status</label>
+			<input id="addToChk" type="text">
+
+			<button id="btnCheckVer">Check if verified</button>
+
+		</div>
+
+		<div>
+			<label for="updatePrice" class="col-lg-2 control-label">Enter new price</label>
+			<input id="updatePrice" type="text">
+
+			<button id="btnUpdatePrice">Update Price</button>
+
+		</div>
+
+</body>
+
+</html>
