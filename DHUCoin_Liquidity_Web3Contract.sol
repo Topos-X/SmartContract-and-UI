@@ -273,12 +273,7 @@ contract DHUCoin is StandardToken{
         Verification(_investor);
     }
     
-    function checkVerification(address _investor) public onlyControllingWallets{
-        var curStatus =  verified[_investor];
-        ValidationStatus(curStatus);
-    }
-    
-    function removeVerifiedInvestor(address investor) external onlyControllingWallets{
+    function removeVerifiedInvestor(address investor) public onlyControllingWallets{
         verified[investor] = false;
         Verification(investor);
     }
