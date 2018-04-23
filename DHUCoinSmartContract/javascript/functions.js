@@ -10,7 +10,8 @@ $(document).ready(function () {
     web3.eth.defaultAccount = web3.eth.accounts[0];
 
     //ABI for contract
-    var DHUCoinContract = web3.eth.contract([{
+    var DHUCoinContract = web3.eth.contract([
+        {
             "constant": false,
             "inputs": [],
             "name": "unhaltICO",
@@ -23,17 +24,20 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "name",
-            "outputs": [{
-                "name": "",
-                "type": "string"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "name": "_spender",
                     "type": "address"
                 },
@@ -43,25 +47,31 @@ $(document).ready(function () {
                 }
             ],
             "name": "approve",
-            "outputs": [{
-                "name": "success",
-                "type": "bool"
-            }],
+            "outputs": [
+                {
+                    "name": "success",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "constant": true,
-            "inputs": [{
-                "name": "",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "name": "verified",
-            "outputs": [{
-                "name": "",
-                "type": "bool"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
@@ -79,20 +89,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "icoStartBlock",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "investor",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "investor",
+                    "type": "address"
+                }
+            ],
             "name": "removeVerifiedInvestor",
             "outputs": [],
             "payable": false,
@@ -103,10 +117,12 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "totalSupply",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
@@ -115,20 +131,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "grantVestedDHUContract",
-            "outputs": [{
-                "name": "",
-                "type": "address"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newBottomInteger",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "newBottomInteger",
+                    "type": "uint256"
+                }
+            ],
             "name": "updatePriceBottomInteger",
             "outputs": [],
             "payable": false,
@@ -139,17 +159,20 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "mainWallet",
-            "outputs": [{
-                "name": "",
-                "type": "address"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "name": "_from",
                     "type": "address"
                 },
@@ -163,10 +186,12 @@ $(document).ready(function () {
                 }
             ],
             "name": "transferFrom",
-            "outputs": [{
-                "name": "success",
-                "type": "bool"
-            }],
+            "outputs": [
+                {
+                    "name": "success",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
@@ -184,10 +209,12 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "decimals",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
@@ -196,20 +223,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "previousUpdateTime",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newMainWallet",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "newMainWallet",
+                    "type": "address"
+                }
+            ],
             "name": "changeMainWallet",
             "outputs": [],
             "payable": false,
@@ -220,20 +251,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "icoEndBlock",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newTopInteger",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "newTopInteger",
+                    "type": "uint256"
+                }
+            ],
             "name": "updatePriceDHU",
             "outputs": [],
             "payable": false,
@@ -242,15 +277,19 @@ $(document).ready(function () {
         },
         {
             "constant": true,
-            "inputs": [{
-                "name": "_owner",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "_owner",
+                    "type": "address"
+                }
+            ],
             "name": "balanceOf",
-            "outputs": [{
-                "name": "balance",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "balance",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
@@ -259,20 +298,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "priceUpdateWaitingTime",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newIcoEndBlock",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "newIcoEndBlock",
+                    "type": "uint256"
+                }
+            ],
             "name": "changeIcoEndBlock",
             "outputs": [],
             "payable": false,
@@ -283,20 +326,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "setTrading",
-            "outputs": [{
-                "name": "",
-                "type": "bool"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newIcoStartBlock",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "newIcoStartBlock",
+                    "type": "uint256"
+                }
+            ],
             "name": "changeIcoStartBlock",
             "outputs": [],
             "payable": false,
@@ -316,17 +363,20 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "minInvestment",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "name": "_spender",
                     "type": "address"
                 },
@@ -340,22 +390,27 @@ $(document).ready(function () {
                 }
             ],
             "name": "changeApproval",
-            "outputs": [{
-                "name": "success",
-                "type": "bool"
-            }],
+            "outputs": [
+                {
+                    "name": "success",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "constant": true,
-            "inputs": [{
-                "name": "",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "name": "liquidations",
-            "outputs": [{
+            "outputs": [
+                {
                     "name": "tokens",
                     "type": "uint256"
                 },
@@ -370,10 +425,12 @@ $(document).ready(function () {
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "amountTokensToLiquidate",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "amountTokensToLiquidate",
+                    "type": "uint256"
+                }
+            ],
             "name": "requestLiquidation",
             "outputs": [],
             "payable": false,
@@ -384,20 +441,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "symbol",
-            "outputs": [{
-                "name": "",
-                "type": "string"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "string"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "amount",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "amount",
+                    "type": "uint256"
+                }
+            ],
             "name": "removeLiquidity",
             "outputs": [],
             "payable": false,
@@ -408,7 +469,8 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "currentPrice",
-            "outputs": [{
+            "outputs": [
+                {
                     "name": "topInteger",
                     "type": "uint256"
                 },
@@ -423,15 +485,19 @@ $(document).ready(function () {
         },
         {
             "constant": true,
-            "inputs": [{
-                "name": "amountTokensToLiquidate",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "amountTokensToLiquidate",
+                    "type": "uint256"
+                }
+            ],
             "name": "checkLiquidationValue",
-            "outputs": [{
-                "name": "etherValue",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "etherValue",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
@@ -447,7 +513,8 @@ $(document).ready(function () {
         },
         {
             "constant": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "name": "_to",
                     "type": "address"
                 },
@@ -457,20 +524,24 @@ $(document).ready(function () {
                 }
             ],
             "name": "transfer",
-            "outputs": [{
-                "name": "success",
-                "type": "bool"
-            }],
+            "outputs": [
+                {
+                    "name": "success",
+                    "type": "bool"
+                }
+            ],
             "payable": false,
             "stateMutability": "nonpayable",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newPriceUpdateWaitingTime",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "newPriceUpdateWaitingTime",
+                    "type": "uint256"
+                }
+            ],
             "name": "changePriceUpdateWaitingTime",
             "outputs": [],
             "payable": false,
@@ -479,27 +550,15 @@ $(document).ready(function () {
         },
         {
             "constant": true,
-            "inputs": [{
-                "name": "_investor",
-                "type": "address"
-            }],
-            "name": "checkVerification",
-            "outputs": [{
-                "name": "",
-                "type": "bool"
-            }],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "name": "prices",
-            "outputs": [{
+            "outputs": [
+                {
                     "name": "topInteger",
                     "type": "uint256"
                 },
@@ -514,10 +573,12 @@ $(document).ready(function () {
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "newSecondaryWallet",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "newSecondaryWallet",
+                    "type": "address"
+                }
+            ],
             "name": "changeSecondaryWallet",
             "outputs": [],
             "payable": false,
@@ -528,20 +589,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "icoBottomIntegerPrice",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "grantVestedDHUContractInput",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "grantVestedDHUContractInput",
+                    "type": "address"
+                }
+            ],
             "name": "setGrantVestedDHUContract",
             "outputs": [],
             "payable": false,
@@ -552,20 +617,24 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "maxSupply",
-            "outputs": [{
-                "name": "",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "_investor",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "_investor",
+                    "type": "address"
+                }
+            ],
             "name": "verifyInvestor",
             "outputs": [],
             "payable": false,
@@ -574,10 +643,12 @@ $(document).ready(function () {
         },
         {
             "constant": false,
-            "inputs": [{
-                "name": "investor",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "name": "investor",
+                    "type": "address"
+                }
+            ],
             "name": "buyTo",
             "outputs": [],
             "payable": true,
@@ -586,7 +657,8 @@ $(document).ready(function () {
         },
         {
             "constant": true,
-            "inputs": [{
+            "inputs": [
+                {
                     "name": "_owner",
                     "type": "address"
                 },
@@ -596,10 +668,12 @@ $(document).ready(function () {
                 }
             ],
             "name": "allowance",
-            "outputs": [{
-                "name": "remaining",
-                "type": "uint256"
-            }],
+            "outputs": [
+                {
+                    "name": "remaining",
+                    "type": "uint256"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
@@ -617,16 +691,19 @@ $(document).ready(function () {
             "constant": true,
             "inputs": [],
             "name": "secondaryWallet",
-            "outputs": [{
-                "name": "",
-                "type": "address"
-            }],
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
             "payable": false,
             "stateMutability": "view",
             "type": "function"
         },
         {
-            "inputs": [{
+            "inputs": [
+                {
                     "name": "secondaryWalletInput",
                     "type": "address"
                 },
@@ -654,17 +731,20 @@ $(document).ready(function () {
         },
         {
             "anonymous": false,
-            "inputs": [{
-                "indexed": true,
-                "name": "investor",
-                "type": "address"
-            }],
+            "inputs": [
+                {
+                    "indexed": true,
+                    "name": "investor",
+                    "type": "address"
+                }
+            ],
             "name": "Verification",
             "type": "event"
         },
         {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "indexed": true,
                     "name": "investor",
                     "type": "address"
@@ -680,7 +760,8 @@ $(document).ready(function () {
         },
         {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "indexed": true,
                     "name": "investor",
                     "type": "address"
@@ -701,7 +782,8 @@ $(document).ready(function () {
         },
         {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "indexed": true,
                     "name": "investor",
                     "type": "address"
@@ -727,7 +809,8 @@ $(document).ready(function () {
         },
         {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "indexed": false,
                     "name": "topInteger",
                     "type": "uint256"
@@ -743,37 +826,44 @@ $(document).ready(function () {
         },
         {
             "anonymous": false,
-            "inputs": [{
-                "indexed": false,
-                "name": "etherAmount",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "indexed": false,
+                    "name": "etherAmount",
+                    "type": "uint256"
+                }
+            ],
             "name": "AddLiquidity",
             "type": "event"
         },
         {
             "anonymous": false,
-            "inputs": [{
-                "indexed": false,
-                "name": "etherAmount",
-                "type": "uint256"
-            }],
+            "inputs": [
+                {
+                    "indexed": false,
+                    "name": "etherAmount",
+                    "type": "uint256"
+                }
+            ],
             "name": "RemoveLiquidity",
             "type": "event"
         },
         {
             "anonymous": false,
-            "inputs": [{
-                "indexed": false,
-                "name": "status",
-                "type": "bool"
-            }],
+            "inputs": [
+                {
+                    "indexed": false,
+                    "name": "status",
+                    "type": "bool"
+                }
+            ],
             "name": "ValidationStatus",
             "type": "event"
         },
         {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "indexed": true,
                     "name": "_from",
                     "type": "address"
@@ -794,7 +884,8 @@ $(document).ready(function () {
         },
         {
             "anonymous": false,
-            "inputs": [{
+            "inputs": [
+                {
                     "indexed": true,
                     "name": "_owner",
                     "type": "address"
@@ -816,7 +907,7 @@ $(document).ready(function () {
     ]);
 
     //Creates an instance of the contract
-    var _DHUCoinContract = DHUCoinContract.at('0x01ba63dac5b26a2616a906b29a264c364ef0216c');
+    var _DHUCoinContract = DHUCoinContract.at('0x69940eb7380a706fec1fbae9734dc7811cded37d');
 
     var curEvent;
     var Events = {
