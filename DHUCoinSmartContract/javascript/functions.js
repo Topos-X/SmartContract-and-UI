@@ -11,14 +11,14 @@ $(document).ready(function () {
 
     //ABI for contract
     var DHUCoinContract = web3.eth.contract([{
-            "constant": false,
-            "inputs": [],
-            "name": "unhaltICO",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
+        "constant": false,
+        "inputs": [],
+        "name": "unhaltICO",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
         {
             "constant": true,
             "inputs": [],
@@ -34,9 +34,9 @@ $(document).ready(function () {
         {
             "constant": false,
             "inputs": [{
-                    "name": "_spender",
-                    "type": "address"
-                },
+                "name": "_spender",
+                "type": "address"
+            },
                 {
                     "name": "_value",
                     "type": "uint256"
@@ -150,9 +150,9 @@ $(document).ready(function () {
         {
             "constant": false,
             "inputs": [{
-                    "name": "_from",
-                    "type": "address"
-                },
+                "name": "_from",
+                "type": "address"
+            },
                 {
                     "name": "_to",
                     "type": "address"
@@ -327,9 +327,9 @@ $(document).ready(function () {
         {
             "constant": false,
             "inputs": [{
-                    "name": "_spender",
-                    "type": "address"
-                },
+                "name": "_spender",
+                "type": "address"
+            },
                 {
                     "name": "_oldValue",
                     "type": "uint256"
@@ -356,9 +356,9 @@ $(document).ready(function () {
             }],
             "name": "liquidations",
             "outputs": [{
-                    "name": "tokens",
-                    "type": "uint256"
-                },
+                "name": "tokens",
+                "type": "uint256"
+            },
                 {
                     "name": "time",
                     "type": "uint256"
@@ -409,9 +409,9 @@ $(document).ready(function () {
             "inputs": [],
             "name": "currentPrice",
             "outputs": [{
-                    "name": "topInteger",
-                    "type": "uint256"
-                },
+                "name": "topInteger",
+                "type": "uint256"
+            },
                 {
                     "name": "bottomInteger",
                     "type": "uint256"
@@ -448,9 +448,9 @@ $(document).ready(function () {
         {
             "constant": false,
             "inputs": [{
-                    "name": "_to",
-                    "type": "address"
-                },
+                "name": "_to",
+                "type": "address"
+            },
                 {
                     "name": "_value",
                     "type": "uint256"
@@ -485,9 +485,9 @@ $(document).ready(function () {
             }],
             "name": "prices",
             "outputs": [{
-                    "name": "topInteger",
-                    "type": "uint256"
-                },
+                "name": "topInteger",
+                "type": "uint256"
+            },
                 {
                     "name": "bottomInteger",
                     "type": "uint256"
@@ -572,9 +572,9 @@ $(document).ready(function () {
         {
             "constant": true,
             "inputs": [{
-                    "name": "_owner",
-                    "type": "address"
-                },
+                "name": "_owner",
+                "type": "address"
+            },
                 {
                     "name": "_spender",
                     "type": "address"
@@ -612,9 +612,9 @@ $(document).ready(function () {
         },
         {
             "inputs": [{
-                    "name": "secondaryWalletInput",
-                    "type": "address"
-                },
+                "name": "secondaryWalletInput",
+                "type": "address"
+            },
                 {
                     "name": "priceTopIntegerInput",
                     "type": "uint256"
@@ -650,10 +650,10 @@ $(document).ready(function () {
         {
             "anonymous": false,
             "inputs": [{
-                    "indexed": true,
-                    "name": "investor",
-                    "type": "address"
-                },
+                "indexed": true,
+                "name": "investor",
+                "type": "address"
+            },
                 {
                     "indexed": false,
                     "name": "amountTokens",
@@ -666,10 +666,10 @@ $(document).ready(function () {
         {
             "anonymous": false,
             "inputs": [{
-                    "indexed": true,
-                    "name": "investor",
-                    "type": "address"
-                },
+                "indexed": true,
+                "name": "investor",
+                "type": "address"
+            },
                 {
                     "indexed": false,
                     "name": "amountTokens",
@@ -687,10 +687,10 @@ $(document).ready(function () {
         {
             "anonymous": false,
             "inputs": [{
-                    "indexed": true,
-                    "name": "investor",
-                    "type": "address"
-                },
+                "indexed": true,
+                "name": "investor",
+                "type": "address"
+            },
                 {
                     "indexed": true,
                     "name": "beneficiary",
@@ -713,10 +713,10 @@ $(document).ready(function () {
         {
             "anonymous": false,
             "inputs": [{
-                    "indexed": false,
-                    "name": "topInteger",
-                    "type": "uint256"
-                },
+                "indexed": false,
+                "name": "topInteger",
+                "type": "uint256"
+            },
                 {
                     "indexed": false,
                     "name": "bottomInteger",
@@ -759,10 +759,10 @@ $(document).ready(function () {
         {
             "anonymous": false,
             "inputs": [{
-                    "indexed": true,
-                    "name": "_from",
-                    "type": "address"
-                },
+                "indexed": true,
+                "name": "_from",
+                "type": "address"
+            },
                 {
                     "indexed": true,
                     "name": "_to",
@@ -780,10 +780,10 @@ $(document).ready(function () {
         {
             "anonymous": false,
             "inputs": [{
-                    "indexed": true,
-                    "name": "_owner",
-                    "type": "address"
-                },
+                "indexed": true,
+                "name": "_owner",
+                "type": "address"
+            },
                 {
                     "indexed": true,
                     "name": "_spender",
@@ -870,6 +870,64 @@ $(document).ready(function () {
         }
     });
 
+    //Button to update main wallet
+    $("#btnNewMW").click(function () {
+        var _addNewMW = $("#addMW").val();
+
+        //Input check
+        if (isEmpty(_addNewMW) || !isNumber(_addNewMW)) {
+            InvalidAddressAlert();
+            return;
+        }
+
+        showHideLoader(1);
+        _DHUCoinContract.changeMainWallet(_addNewMW, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Button to update secondary wallet----(no view yet)
+    $("#").click(function () {
+        var _addToInvalidate = $("#").val();
+
+        //Input check
+        if (isEmpty(_addToInvalidate) || !isNumber(_addToInvalidate)) {
+            InvalidAddressAlert();
+            return;
+        }
+
+        showHideLoader(1);
+        _DHUCoinContract.changeSecondaryWallet(_addToInvalidate, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Button to update ICO start block----(no view yet)
+    $("#").click(function () {
+        var _addToInvalidate = $("#").val();
+        showHideLoader(1);
+        _DHUCoinContract.changeIcoStartBlock(_addToInvalidate, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Button to update ICO bottom block----(no view yet)
+    $("#").click(function () {
+        var _addToInvalidate = $("#").val();
+        showHideLoader(1);
+        _DHUCoinContract.changeIcoEndBlock(_addToInvalidate, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
     //button to update top price integer
     $("#btnUpdatePrice").click(function () {
         showHideLoader(1);
@@ -879,9 +937,8 @@ $(document).ready(function () {
                 showHideLoader(0);
             }
         });
-        curEvent = Events["UpdatePriceEvent"];
     });
-    
+
     //button to update bottom price integer
     $("#btnUpdateBtmPrice").click(function () {
         showHideLoader(1);
@@ -891,7 +948,6 @@ $(document).ready(function () {
                 showHideLoader(0);
             }
         });
-        curEvent = Events["UpdatePriceEvent"];
     });
 
     //Common event for getting updated price
