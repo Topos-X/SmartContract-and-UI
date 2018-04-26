@@ -888,9 +888,9 @@ $(document).ready(function () {
         });
     });
 
-    //Button to update secondary wallet----(no view yet)
-    $("#").click(function () {
-        var _addToInvalidate = $("#").val();
+    //Button to update secondary wallet
+    $("#btnNewSW").click(function () {
+        var _addToInvalidate = $("#addSW").val();
 
         //Input check
         if (isEmpty(_addToInvalidate) || !isNumber(_addToInvalidate)) {
@@ -906,9 +906,9 @@ $(document).ready(function () {
         });
     });
 
-    //Button to update ICO start block----(no view yet)
-    $("#").click(function () {
-        var _addToInvalidate = $("#").val();
+    //Button to update ICO start block
+    $("#btnNewStartBlock").click(function () {
+        var _addToInvalidate = $("#newStartBlock").val();
         showHideLoader(1);
         _DHUCoinContract.changeIcoStartBlock(_addToInvalidate, (err, res) => {
             if (err) {
@@ -917,9 +917,9 @@ $(document).ready(function () {
         });
     });
 
-    //Button to update ICO bottom block----(no view yet)
-    $("#").click(function () {
-        var _addToInvalidate = $("#").val();
+    //Button to update ICO bottom block
+    $("#btnNewEndBlock").click(function () {
+        var _addToInvalidate = $("#newEndBlock").val();
         showHideLoader(1);
         _DHUCoinContract.changeIcoEndBlock(_addToInvalidate, (err, res) => {
             if (err) {
@@ -1027,7 +1027,7 @@ $(document).ready(function () {
         });
     });
 
-    //Button for checking ICo start block
+    //Button for checking ICO start block
     $("#btnCheckSBlk").click(function () {
         showHideLoader(1);
         _DHUCoinContract.icoStartBlock((err, res) => {
@@ -1096,8 +1096,8 @@ $(document).ready(function () {
         showHideLoader(0);
         $("#insTrans").html('');
         $("#transBlock").html('');
-        var x = $(".container").position();
-        window.scrollTo(x.left, x.top);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
     }
 
     //Common info function (only on successful transaction)
