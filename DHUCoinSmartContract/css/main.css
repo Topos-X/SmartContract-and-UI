@@ -31,7 +31,7 @@ body {
 
 .container {
     width: 80%;
-    margin: 70px auto 0 auto;
+    margin: 100px auto 0 auto;
     background-color: #c1dff0;
     padding: 5em 5em 0 5em;
     top: 40px;
@@ -53,6 +53,11 @@ input {
     padding: 1em 4em;
     border-radius: 5px;
     background-color: #b7e0f6;
+    width: 200px;
+}
+
+button:hover{
+    background-color: #48a8db;
 }
 
 hr {
@@ -73,9 +78,9 @@ hr {
 #loader {
     width: 100px;
     display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 30px;
+    position: absolute;
+    bottom:10px;
+    right: 80px;
     z-index: 99;
     border: none;
     outline: none;
@@ -108,13 +113,13 @@ hr {
 
     .container {
         width: 90%;
-        margin: 50px auto 0 auto;
+        margin: 140px auto 0 auto;
         background-color: #c1dff0;
         padding: 1em;
     }
 
     .navbar {
-        font-size: x-small;
+        font-size: smaller;
     }
 
     .button {

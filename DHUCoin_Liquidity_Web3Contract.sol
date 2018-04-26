@@ -161,6 +161,8 @@ contract DHUCoin is StandardToken{
     event AddLiquidity(uint256 etherAmount);
     event RemoveLiquidity(uint256 etherAmount);
     event ValidationStatus(bool status);
+    event ICOBlockChanged(uint256 block);
+    event WalletChanged(address newAddress);
     
     // for price updates as a rational number
     struct PriceDHU{
@@ -273,7 +275,11 @@ contract DHUCoin is StandardToken{
         Verification(_investor);
     }
     
-    function removeVerifiedInvestor(address investor) public onlyControllingWallets{
+    function checkVerification(address _investor) constant returns(bool){
+        return verified[_investor];
+    }
+    
+    function removeVerifiedInvestor(address investor) external onlyControllingWallets{
         verified[investor] = false;
         Verification(investor);
     }
@@ -319,12 +325,14 @@ contract DHUCoin is StandardToken{
         require(block.number < icoStartBlock);
         require(block.number < newIcoStartBlock);
         icoStartBlock = newIcoStartBlock;
+        ICOBlockChanged(icoStartBlock);
     }
 
     function changeIcoEndBlock(uint256 newIcoEndBlock) external onlyMainWallet{
         require(block.number < icoEndBlock);
         require(block.number < newIcoEndBlock);
         icoEndBlock = newIcoEndBlock;
+        ICOBlockChanged(icoEndBlock);
     }
 
     function changePriceUpdateWaitingTime(uint256 newPriceUpdateWaitingTime) external onlyMainWallet{
@@ -396,11 +404,13 @@ contract DHUCoin is StandardToken{
     function changeMainWallet(address newMainWallet) external onlyMainWallet{
         require(newMainWallet != address(0));
         mainWallet = newMainWallet;
+        WalletChanged(mainWallet);
     }
 
     function changeSecondaryWallet(address newSecondaryWallet) external onlyMainWallet{
         require(newSecondaryWallet != address(0));
         secondaryWallet = newSecondaryWallet;
+        WalletChanged(secondaryWallet);
     }
 
     function enableTrading() external onlyMainWallet{
