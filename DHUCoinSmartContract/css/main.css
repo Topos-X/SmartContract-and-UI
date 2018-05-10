@@ -1,13 +1,13 @@
 body {
-    background-color: #3587a4;
+    background-color: #ffca8b;
     padding: 2em;
-    font-family: 'Raleway','Source Sans Pro', 'Arial';
+    font-family: 'Raleway', 'Source Sans Pro', 'Arial';
 }
 
 .navbar {
     color: white;
     overflow: hidden;
-    background-color: #88ccf1;
+    background-color: #ff8c00;
     position: fixed;
     top: 0;
     left: 0;
@@ -30,43 +30,66 @@ body {
         }
 
 .container {
-    width: 80%;
-    margin: 100px auto 0 auto;
-    background-color: #c1dff0;
-    padding: 5em 5em 0 5em;
-    top: 40px;
+    width: 90%;
+    margin: 140px auto 0px auto;
+    background-color: #ffa02e;
+    padding: 4em;
+    display: flex;
+    border-radius: 10px;
+}
+
+li {
+    color: white;
+}
+
+#seperator1 {
+    width: 50%;
+    float: left;
+    display: block;
+}
+
+#seperator2 {
+    width: 50%;
+    float: left;
+    display: block;
+}
+
+.gridView {
+    margin: 10px;
+    padding: 15px;
+    border: 2px white solid;
+    border-radius: 20px;
+    margin-bottom: 30px;
 }
 
 label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 20px;
 }
 
 input {
-    padding: 10px;
-    width: 50%;
+    padding: 5px;
+    border-radius: 5px;
+    width: 70%;
     margin-bottom: 1em;
 }
 
 .button {
-    margin: 2em 0;
-    padding: 1em 4em;
-    border-radius: 5px;
-    background-color: #b7e0f6;
-    width: 200px;
-}
-
-button:hover{
-    background-color: #48a8db;
-}
-
-hr {
     display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #808080;
-    margin: 1em 0;
-    padding: 0;
+    margin-left: 5px;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #ff8c00;
+    width: 50%;
+    color: white;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #ffca8b;
 }
 
 #instructor {
@@ -79,8 +102,8 @@ hr {
     width: 100px;
     display: none;
     position: absolute;
-    bottom:10px;
-    right: 80px;
+    bottom: 10px;
+    right: 40px;
     z-index: 99;
     border: none;
     outline: none;
@@ -94,11 +117,11 @@ hr {
     z-index: 99;
     border: none;
     outline: none;
-    background-color: #3dbdbf;
+    background-color: #fff4e7;
     color: white;
     cursor: pointer;
     padding: 15px;
-    border-radius: 100%;
+    border-radius: 30%;
     font-size: 18px;
 }
 
@@ -114,8 +137,8 @@ hr {
     .container {
         width: 90%;
         margin: 140px auto 0 auto;
-        background-color: #c1dff0;
         padding: 1em;
+        display: block;
     }
 
     .navbar {
@@ -125,9 +148,35 @@ hr {
     .button {
         width: 100%;
         margin: 1em 0;
+        font-size: 12px;
     }
 
     .fitTextBox {
-        width: 90%;
+        width: 95%;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    #seperator1 {
+        width: 100%;
+        float: none;
+        display: block;
+    }
+
+    #seperator2 {
+        width: 100%;
+        float: none;
+        display: block;
+    }
+
+    #loader {
+        bottom: 5px;
+        right: 20px;
+    }
+
+    ul {
+        padding: 5px;
     }
 }

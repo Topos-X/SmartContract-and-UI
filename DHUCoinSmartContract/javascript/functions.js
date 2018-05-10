@@ -962,8 +962,9 @@ $(document).ready(function () {
         "SecondaryWalletChangeEvent": 6
     }
 
-    //button to verify an address
+    //button to whitelist an address
     $("#btnVerify").click(function () {
+        ResetNavbar();
         var _toVerifyAdd = $("#toVerifyAdd").val();
         //Input check
         if (isEmpty(_toVerifyAdd) || !isNumber(_toVerifyAdd)) {
@@ -980,18 +981,19 @@ $(document).ready(function () {
         curEvent = Events["ValidateEvent"];
     });
 
-    //button for invalidating an address
+    //button for blacklist an address
     $("#btnRemoveAdd").click(function () {
-        var _addToInvalidate = $("#addToRemove").val();
+        ResetNavbar();
+        var _addToRemove = $("#addToRemove").val();
 
         //Input check
-        if (isEmpty(_addToInvalidate) || !isNumber(_addToInvalidate)) {
+        if (isEmpty(_addToRemove) || !isNumber(_addToRemove)) {
             InvalidAddressAlert();
             return;
         }
 
         showHideLoader(1);
-        _DHUCoinContract.removeVerifiedInvestor(_addToInvalidate, (err, res) => {
+        _DHUCoinContract.removeVerifiedInvestor(_addToRemove, (err, res) => {
             if (err) {
                 showHideLoader(0);
             }
@@ -1005,13 +1007,78 @@ $(document).ready(function () {
     verificationEvent.watch(function (error, result) {
         if (!error) {
             TransactionComplete(result);
-
             switch (curEvent) {
                 case Events["ValidateEvent"]:
                     $("#transactionResult").html('Address verified: ' + result.args.investor);
                     break;
                 case Events["InvalidateEvent"]:
                     $("#transactionResult").html('Address removed: ' + result.args.investor);
+                    break;
+            }
+
+        } else {
+            alert("Something went wrong!");
+            showHideLoader(0);
+        }
+    });
+
+    //Button to update main wallet
+    $("#btnNewMW").click(function () {
+        ResetNavbar();
+        var _addMW = $("#addMW").val();
+
+        //Input check
+        if (isEmpty(_addMW) || !isNumber(_addMW)) {
+            InvalidAddressAlert();
+            return;
+        }
+
+        showHideLoader(1);
+        _DHUCoinContract.changeMainWallet(_addMW, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Button to update secondary wallet
+    $("#btnNewSW").click(function () {
+        ResetNavbar();
+        var _addSW = $("#addSW").val();
+
+        //Input check
+        if (isEmpty(_addSW) || !isNumber(_addSW)) {
+            InvalidAddressAlert();
+            return;
+        }
+
+        showHideLoader(1);
+        _DHUCoinContract.changeSecondaryWallet(_addSW, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Event for checking start/end block
+    var WalletChangeEvent = _DHUCoinContract.WalletChanged({}, 'latest');
+
+    WalletChangeEvent.watch(function (error, result) {
+        if (!error) {
+            TransactionComplete(result);
+
+            switch (curEvent) {
+                case Events["MainWalletChangeEvent"]:
+                    $("#transactionResult").html('New Main Wallet: ' + result.args.newAddress);
+                    break;
+                case Events["SecondaryWalletChangeEvent"]:
+                    $("#transactionResult").html('New Secondary Wallet: ' + result.args.newAddress);
                     break;
                 default:
                     alert("Something went wrong!");
@@ -1023,90 +1090,34 @@ $(document).ready(function () {
         }
     });
 
-    //Button to update main wallet
-    $("#btnNewMW").click(function () {
-        var _addNewMW = $("#addMW").val();
-
-        //Input check
-        if (isEmpty(_addNewMW) || !isNumber(_addNewMW)) {
-            InvalidAddressAlert();
-            return;
-        }
-
-        showHideLoader(1);
-        _DHUCoinContract.changeMainWallet(_addNewMW, (err, res) => {
-            if (err) {
-                showHideLoader(0);
-            }
-        });
-        curEvent = Events["MainWalletChangeEvent"];
-    });
-
-    //Button to update secondary wallet
-    $("#btnNewSW").click(function () {
-        var _addToInvalidate = $("#addSW").val();
-
-        //Input check
-        if (isEmpty(_addToInvalidate) || !isNumber(_addToInvalidate)) {
-            InvalidAddressAlert();
-            return;
-        }
-
-        showHideLoader(1);
-        _DHUCoinContract.changeSecondaryWallet(_addToInvalidate, (err, res) => {
-            if (err) {
-                showHideLoader(0);
-            }
-        });
-        curEvent = Events["SecondaryWalletChangeEvent"];
-    });
-
-        //Event for checking start/end block
-        var WalletChangeEvent = _DHUCoinContract.WalletChanged({}, 'latest');
-
-        WalletChangeEvent.watch(function (error, result) {
-            if (!error) {
-                TransactionComplete(result);
-    
-                switch (curEvent) {
-                    case Events["MainWalletChangeEvent"]:
-                        $("#transactionResult").html('New Main Wallet: ' + result.args.newAddress);
-                        break;
-                    case Events["SecondaryWalletChangeEvent"]:
-                        $("#transactionResult").html('New Secondary Wallet: ' + result.args.newAddress);
-                        break;
-                    default:
-                        alert("Something went wrong!");
-                }
-    
-            } else {
-                alert("Something went wrong!");
-                showHideLoader(0);
-            }
-        });    
-
     //Button to update ICO start block
     $("#btnNewStartBlock").click(function () {
-        var _addToInvalidate = $("#newStartBlock").val();
+        ResetNavbar();
+        var _newStartBlock = $("#newStartBlock").val();
         showHideLoader(1);
-        _DHUCoinContract.changeIcoStartBlock(_addToInvalidate, (err, res) => {
+        _DHUCoinContract.changeIcoStartBlock(_newStartBlock, (err, res) => {
             if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
                 showHideLoader(0);
             }
         });
-        curEvent = Events["StartBlockChangeEvent"];
     });
 
-    //Button to update ICO bottom block
+    //Button to update ICO End block
     $("#btnNewEndBlock").click(function () {
-        var _addToInvalidate = $("#newEndBlock").val();
+        ResetNavbar();
+        var _newEndBlock = $("#newEndBlock").val();
         showHideLoader(1);
-        _DHUCoinContract.changeIcoEndBlock(_addToInvalidate, (err, res) => {
+        _DHUCoinContract.changeIcoEndBlock(_newEndBlock, (err, res) => {
             if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
                 showHideLoader(0);
             }
         });
-        curEvent = Events["EndBlockChangeEvent"];
     });
 
     //Event for checking start/end block
@@ -1133,11 +1144,173 @@ $(document).ready(function () {
         }
     });
 
+    //Button to enable trading
+    $("#btnEnableTrading").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.enableTrading((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Button to liquidate
+    $("#btnLiquidate").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.liquidate((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Event for liquidation
+    var LiquidateEvent = _DHUCoinContract.Liquidations({}, 'latest');
+
+    LiquidateEvent.watch(function (error, result) {
+        if (!error) {
+            TransactionComplete(result);
+            $("#transactionResult").html('Investor: ' + result.args.investor + ', Amount of tokens: ' + result.args.amountTokens + ', Amount of Ether: ' + result.args.etherAmount);
+        } else {
+            alert("Something went wrong!");
+            showHideLoader(0);
+        }
+    });
+
+    //button to halt ICO
+    $("#btnHaltICO").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.haltICO((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //button to unhalt ICO
+    $("#btnUnhaltICO").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.unhaltICO((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Button to Request liquidation
+    $("#btnRequestLiquidation").click(function () {
+        ResetNavbar();
+        var _tokensToLiquidate = $("#tokensToLiquidate").val();
+        showHideLoader(1);
+        _DHUCoinContract.requestLiquidation(_tokensToLiquidate, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Event for liquidation request
+    var RequestLiquidateEvent = _DHUCoinContract.LiquidationCall({}, 'latest');
+
+    RequestLiquidateEvent.watch(function (error, result) {
+        if (!error) {
+            TransactionComplete(result);
+            $("#transactionResult").html('Investor: ' + result.args.investor + ', Amount of tokens: ' + result.args.amountTokens);
+        } else {
+            alert("Something went wrong!");
+            showHideLoader(0);
+        }
+    });
+
+
+    //Button to add liquidity
+    $("#btnAddLiquidity").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.addLiquidity((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Event for adding liquidity
+    var Addliquidity = _DHUCoinContract.AddLiquidity({}, 'latest');
+
+    Addliquidity.watch(function (error, result) {
+        if (!error) {
+            TransactionComplete(result);
+            $("#transactionResult").html('Amount of ether: ' + result.args.etherAmount);
+        } else {
+            alert("Something went wrong!");
+            showHideLoader(0);
+        }
+    });
+
+    //Button to remove liquidity
+    $("#btnRemoveLiquidity").click(function () {
+        ResetNavbar();
+        var _tokensToRemoveLiq = $("#tokensToRemoveLiq").val();
+        showHideLoader(1);
+        _DHUCoinContract.removeLiquidity(_tokensToRemoveLiq, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Event for removing liquidity
+    var RemoveLiquidityEvent = _DHUCoinContract.RemoveLiquidity({}, 'latest');
+
+    RemoveLiquidityEvent.watch(function (error, result) {
+        if (!error) {
+            TransactionComplete(result);
+            $("#transactionResult").html('Amount of ether: ' + result.args.etherAmount);
+        } else {
+            alert("Something went wrong!");
+            showHideLoader(0);
+        }
+    });
+
+    //button for setting grant vested contract
+    $("#btnSetVestedContract").click(function () {
+        ResetNavbar();
+        var _vestedContractAdd = $("#vestedContractAdd").val();
+        //Input check
+        if (isEmpty(_vestedContractAdd) || !isNumber(_vestedContractAdd)) {
+            InvalidAddressAlert();
+            return;
+        }
+        showHideLoader(1);
+        _DHUCoinContract.setGrantVestedDHUContract(_vestedContractAdd, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
     //button to update top price integer
     $("#btnUpdatePrice").click(function () {
+        ResetNavbar();
         showHideLoader(1);
-        var _updatePrice = $("#updatePriceTop").val();
-        _DHUCoinContract.updatePriceDHU(_updatePrice, (err, res) => {
+        var _updatePriceTop = $("#updatePriceTop").val();
+        _DHUCoinContract.updatePriceDHU(_updatePriceTop, (err, res) => {
             if (err) {
                 showHideLoader(0);
             }
@@ -1146,15 +1319,15 @@ $(document).ready(function () {
 
     //button to update bottom price integer
     $("#btnUpdateBtmPrice").click(function () {
+        ResetNavbar();
         showHideLoader(1);
-        var _updatePrice = $("#updatePriceBtm").val();
-        _DHUCoinContract.updatePriceBottomInteger(_updatePrice, (err, res) => {
+        var _updatePriceBtm = $("#updatePriceBtm").val();
+        _DHUCoinContract.updatePriceBottomInteger(_updatePriceBtm, (err, res) => {
             if (err) {
                 showHideLoader(0);
             }
         });
     });
-
 
     //Common event for getting updated price
     var updatePriceEvent = _DHUCoinContract.PriceDHUUpdate({}, 'latest');
@@ -1169,9 +1342,9 @@ $(document).ready(function () {
         }
     });
 
-
     //button for checking if verified or not
     $("#btnCheckVer").click(function () {
+        ResetNavbar();
         var _addToChk = $("#addToChk").val();
         //Input check
         if (isEmpty(_addToChk) || !isNumber(_addToChk)) {
@@ -1183,125 +1356,319 @@ $(document).ready(function () {
         _DHUCoinContract.verified(_addToChk, (err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Verified: ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Verified: ' + res);
             }
         });
     });
 
     //button for checking total supply
     $("#btnCheckSup").click(function () {
+        ResetNavbar();
         showHideLoader(1);
         _DHUCoinContract.totalSupply((err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Total supply: ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Total supply: ' + res / Math.pow(10, 18) + ' DHU');
             }
         });
     });
 
     //Button for checking symbol
     $("#btnCheckSym").click(function () {
+        ResetNavbar();
         showHideLoader(1);
         _DHUCoinContract.symbol((err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Current symbol: ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Current symbol: ' + res);
             }
         });
     });
 
     //Button to check contract name
     $("#btnCheckName").click(function () {
+        ResetNavbar();
         showHideLoader(1);
         _DHUCoinContract.name((err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Contract name: ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Contract name: ' + res);
             }
         });
     });
 
     //Button for checking ICO start block
     $("#btnCheckSBlk").click(function () {
+        ResetNavbar();
         showHideLoader(1);
         _DHUCoinContract.icoStartBlock((err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Crowd sale starts at block No. ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Crowd sale starts at block No. ' + res);
             }
         });
     });
 
     //Button for checking ICO end block
     $("#btnCheckEBlk").click(function () {
+        ResetNavbar();
         showHideLoader(1);
         _DHUCoinContract.icoEndBlock((err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Crowd sale ends at block No. ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Crowd sale ends at block No. ' + res);
             }
         });
     });
 
     //Button for checking balance of people
     $("#btnCheckBal").click(function () {
-        var _addToChk = $("#addToChkBal").val();
+        ResetNavbar();
+        var _addToChkBal = $("#addToChkBal").val();
         //Input check
-        if (isEmpty(_addToChk) || !isNumber(_addToChk)) {
+        if (isEmpty(_addToChkBal) || !isNumber(_addToChkBal)) {
             InvalidAddressAlert();
             return;
         }
         showHideLoader(1);
 
-        _DHUCoinContract.balanceOf(_addToChk, (err, res) => {
+        _DHUCoinContract.balanceOf(_addToChkBal, (err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Balance: ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Balance: ' + res / Math.pow(10, 18) + ' DHU');
             }
         });
     });
 
     //Button to check liquidation
     $("#btnCheckLiq").click(function () {
-        var _addToChk = $("#valLiquidChk").val();
+        ResetNavbar();
+        var _valLiquidChk = $("#valLiquidChk").val();
         showHideLoader(1);
-        _DHUCoinContract.checkLiquidationValue(_addToChk, (err, res) => {
+        _DHUCoinContract.checkLiquidationValue(_valLiquidChk, (err, res) => {
             if (err) {
                 showHideLoader(0);
-                InvalidAddressAlert();
             } else {
-                getComplete();
-                $("#transactionResult").html('Liquidation value: ' + res.toString());
+                ResetNavbar();
+                $("#transactionResult").html('Liquidation value: ' + res);
             }
         });
     });
 
-    //Common function for getter funtions (only on success)
-    function getComplete() {
+    //Button for checking Max supply
+    $("#btnMaxSupply").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.maxSupply((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Max Supply: ' + res / Math.pow(10, 18) + ' DHU');
+            }
+        });
+    });
+
+    //Button for checking set trading status 
+    $("#btnSetTrading").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.setTrading((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Set Trading: ' + res);
+            }
+        });
+    });
+
+    //button for checking liquidation request status
+    $("#btnChkLiqReqSta").click(function () {
+        ResetNavbar();
+        var _addLiquidations = $("#addLiquidations").val();
+        //Input check
+        if (isEmpty(_addLiquidations) || !isNumber(_addLiquidations)) {
+            InvalidAddressAlert();
+            return;
+        }
+        showHideLoader(1);
+
+        _DHUCoinContract.liquidations(_addLiquidations, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Tokens: ' + res[0] + ', Time: ' + res[1]);
+            }
+        });
+    });
+
+    //Button for checking secondary wallet
+    $("#btnChkSecWallet").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.secondaryWallet((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Secondary wallet: ' + res);
+            }
+        });
+    });
+
+    //Button for checking main wallet
+    $("#btnChkMainWallet").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.mainWallet((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Main wallet: ' + res);
+            }
+        });
+    });
+
+    //Button for checking granted vesting contract address
+    $("#btnChkGVCA").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.grantVestedDHUContract((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Grant vested DHU contract address: ' + res);
+            }
+        });
+    });
+
+    //Button for checking price update waiting time
+    $("#btnChkPriceUp").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.priceUpdateWaitingTime((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Price update wait time: ' + res + ' sec' + ' (' + res / 60 / 60 + ' hr/hrs)');
+            }
+        });
+    });
+
+    //button for checking DHU price
+    $("#btnChkDHUPri").click(function () {
+        ResetNavbar();
+        var _valDHUPrice = $("#valDHUPrice").val();
+        showHideLoader(1);
+
+        _DHUCoinContract.prices(_valDHUPrice, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Top Integer: ' + res[0] + ', Bottom Integer: ' + res[1]);
+            }
+        });
+    });
+
+    //Button for checking min investment value
+    $("#btnChkMinInv").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.minInvestment((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Min investment value: ' + res / Math.pow(10, 18) + ' ETH');
+            }
+        });
+    });
+
+    //Button for checking ICO bottom Integer
+    $("#btnChkICOBtm").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.icoBottomIntegerPrice((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('ICO bottom integer: ' + res);
+            }
+        });
+    });
+
+    //Button for checking decimals
+    $("#btnChkDecimals").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.decimals((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Decimals: ' + res);
+            }
+        });
+    });
+
+    //Button for checking current price
+    $("#btnChkCurPrice").click(function () {
+        ResetNavbar();
+        showHideLoader(1);
+        _DHUCoinContract.currentPrice((err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                ResetNavbar();
+                $("#transactionResult").html('Top Integer: ' + res[0] + ', Bottom Integer: ' + res[1]);
+            }
+        });
+    });
+
+    //button for changing price update wait time
+    $("#btnChngPriUpdTime").click(function () {
+        ResetNavbar();
+        var _valChngPriUpdTime = $("#valChngPriUpdTime").val();
+        showHideLoader(1);
+
+        _DHUCoinContract.changePriceUpdateWaitingTime(_valChngPriUpdTime, (err, res) => {
+            if (err) {
+                showHideLoader(0);
+            } else {
+                $("#TransHash").html('Transaction Hash: ' + res);
+                showHideLoader(0);
+            }
+        });
+    });
+
+    //Clear navbar
+    function ResetNavbar() {
         showHideLoader(0);
         $("#insTrans").html('');
         $("#transBlock").html('');
+        $("#TransHash").html('');
+        $("#transactionResult").html('');
     }
 
     //Common info function (only on successful transaction)
