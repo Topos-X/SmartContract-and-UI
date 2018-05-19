@@ -316,7 +316,7 @@ contract DHUCoin is StandardToken{
         }
     }
     
-    function addStudent(address _studentAddress, bytes16 _firstName, bytes16 _lastName) public {
+    function addStudent(address _studentAddress, bytes16 _firstName, bytes16 _lastName) view public onlyControllingWallets {
         var student = students[msg.sender];
         
         student.studentAddress = _studentAddress;
