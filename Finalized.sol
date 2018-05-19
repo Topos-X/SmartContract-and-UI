@@ -159,7 +159,7 @@ contract DHUCoin is StandardToken{
     event Verification(address indexed investor);
     event Buy(address indexed investor, address indexed beneficiary, uint256 ethValue, uint256 amountTokens);
     event PriceDHUUpdate(uint256 topInteger, uint256 bottomInteger);
-    event StudentInfo(address studentAddress, bytes16 firstName, bytes16 lastName);
+    event StudentInfo(address studentAddress, string studentID, string firstName, string lastName);
 
     
     // for price updates as a rational number
@@ -169,10 +169,11 @@ contract DHUCoin is StandardToken{
     }
     
     // for students' info
-    struct Student {
+    struct Student{
         address studentAddress;
-        bytes16 firstName;
-        bytes16 lastName;
+        string studentID;
+        string firstName;
+        string lastName;
     }
     
     // grantVestedDHUContract and mainWallet can transfer to allow team allocations
@@ -316,44 +317,45 @@ contract DHUCoin is StandardToken{
         }
     }
     
-    function addStudent(address _studentAddress, bytes16 _firstName, bytes16 _lastName) view public onlyControllingWallets {
-        var student = students[msg.sender];
+    function addStudent(address _studentAddress, string _studentID, string _firstName, string _lastName) public onlyControllingWallets{
+        verified[_studentAddress] = true;
+        var student = students[_studentAddress];
         
-        student.studentAddress = _studentAddress;
+        student.studentID = _studentID;
         student.firstName = _firstName;
         student.lastName = _lastName;
         
-        studentsAccounts.push(msg.sender) -1;
-        emit StudentInfo(msg.sender, _firstName, _lastName);
+        studentsAccounts.push(_studentAddress) - 1;
+        emit Verification(_studentAddress);
+        emit StudentInfo(_studentAddress, _studentID, _firstName, _lastName);
+    }
+    
+    function removeStudent(address _studentAddress) public onlyControllingWallets{
+        verified[_studentAddress] = false;
+        uint index;
+        for(uint i = 0; i < studentsAccounts.length; i ++){
+            if(_studentAddress == studentsAccounts[i]){
+                index = i;
+            }
+        }
+        
+        studentsAccounts[index] = studentsAccounts[studentsAccounts.length - 1];
+        delete studentsAccounts[index];
+        delete students[_studentAddress];
+        studentsAccounts.length --;
+        emit Verification(_studentAddress);
     }
     
     function getAllStudents() view public returns(address[]) {
         return studentsAccounts;
     }
     
-    function getOneStudent(address _address) view public returns (string, string) {
-        return (bytes32ToString(students[_address].firstName), bytes32ToString(students[_address].lastName));
+    function getOneStudent(address _address) view public returns (string, string, string) {
+        return (students[_address].studentID, students[_address].firstName, students[_address].lastName);
     }
     
     function studentsNumber() view public returns (uint) {
         return studentsAccounts.length;
-    }
-    
-    function bytes32ToString(bytes32 x) private constant returns (string) {
-        bytes memory bytesString = new bytes(32);
-        uint charCount = 0;
-        for (uint j = 0; j < 32; j++) {
-            byte char = byte(bytes32(uint(x) * 2 ** (8 * j)));
-            if (char != 0) {
-                bytesString[charCount] = char;
-                charCount++;
-            }
-        }
-        bytes memory bytesStringTrimmed = new bytes(charCount);
-        for (j = 0; j < charCount; j++) {
-            bytesStringTrimmed[j] = bytesString[j];
-        }
-        return string(bytesStringTrimmed);
     }
 
     // change ICO starting date if more time needed for preparation
@@ -419,7 +421,7 @@ contract DHUCoin is StandardToken{
     
     
     /************************************************/
-    /*            CODES FOR PROOF OF WORK           */
+    /*       CODES FOR COMPLETE PROOF OF WORK       */
     /************************************************/
     
     /// Proof of Work, shor's algorithm + discrete logarithm problem + random hash
