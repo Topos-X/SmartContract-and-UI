@@ -145,22 +145,36 @@ contract DHUCoin is StandardToken{
     // tokens will be locked for trading until they are listed on exchanges
     bool public haltICO = false;
     bool public setTrading = false;
+    
+    // counts the number of registered students
+    address[] public studentsAccounts;
 
     // maps previousUpdateTime to the next price
     mapping (uint256 => PriceDHU) public prices;
     // maps verified addresses
     mapping (address => bool) public verified;
+    // maps all students
+    mapping (address => Student) students;
 
     event Verification(address indexed investor);
     event Buy(address indexed investor, address indexed beneficiary, uint256 ethValue, uint256 amountTokens);
     event PriceDHUUpdate(uint256 topInteger, uint256 bottomInteger);
+    event StudentInfo(address studentAddress, bytes16 firstName, bytes16 lastName);
+
     
     // for price updates as a rational number
     struct PriceDHU{
         uint256 topInteger;
         uint256 bottomInteger;
     }
-
+    
+    // for students' info
+    struct Student {
+        address studentAddress;
+        bytes16 firstName;
+        bytes16 lastName;
+    }
+    
     // grantVestedDHUContract and mainWallet can transfer to allow team allocations
     modifier isSetTrading{
         require(setTrading || msg.sender == mainWallet || msg.sender == grantVestedDHUContract);
@@ -301,6 +315,46 @@ contract DHUCoin is StandardToken{
             return bottomInteger;
         }
     }
+    
+    function addStudent(address _studentAddress, bytes16 _firstName, bytes16 _lastName) public {
+        var student = students[msg.sender];
+        
+        student.studentAddress = _studentAddress;
+        student.firstName = _firstName;
+        student.lastName = _lastName;
+        
+        studentsAccounts.push(msg.sender) -1;
+        emit StudentInfo(msg.sender, _firstName, _lastName);
+    }
+    
+    function getAllStudents() view public returns(address[]) {
+        return studentsAccounts;
+    }
+    
+    function getOneStudent(address _address) view public returns (string, string) {
+        return (bytes32ToString(students[_address].firstName), bytes32ToString(students[_address].lastName));
+    }
+    
+    function studentsNumber() view public returns (uint) {
+        return studentsAccounts.length;
+    }
+    
+    function bytes32ToString(bytes32 x) private constant returns (string) {
+        bytes memory bytesString = new bytes(32);
+        uint charCount = 0;
+        for (uint j = 0; j < 32; j++) {
+            byte char = byte(bytes32(uint(x) * 2 ** (8 * j)));
+            if (char != 0) {
+                bytesString[charCount] = char;
+                charCount++;
+            }
+        }
+        bytes memory bytesStringTrimmed = new bytes(charCount);
+        for (j = 0; j < charCount; j++) {
+            bytesStringTrimmed[j] = bytesString[j];
+        }
+        return string(bytesStringTrimmed);
+    }
 
     // change ICO starting date if more time needed for preparation
     function changeIcoStartBlock(uint256 newIcoStartBlock) external onlyMainWallet{
@@ -365,7 +419,7 @@ contract DHUCoin is StandardToken{
     
     
     /************************************************/
-    /*       CODES FOR COMPLETE PROOF OF WORK       */
+    /*            CODES FOR PROOF OF WORK           */
     /************************************************/
     
     /// Proof of Work, shor's algorithm + discrete logarithm problem + random hash
