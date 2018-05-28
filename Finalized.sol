@@ -135,6 +135,7 @@ contract DHUCoin is StandardToken{
     
     // strucure of price
     PriceDHU public currentPrice;
+    Student public registeredStudent;
     uint256 public minInvestment = 0.01 ether;
     
     // for tokens allocated to the team
@@ -154,12 +155,13 @@ contract DHUCoin is StandardToken{
     // maps verified addresses
     mapping (address => bool) public verified;
     // maps all students
-    mapping (address => Student) students;
+    mapping (address => Student) public students;
+    mapping (address => bool) public applicableStudents;
 
     event Verification(address indexed investor);
     event Buy(address indexed investor, address indexed beneficiary, uint256 ethValue, uint256 amountTokens);
     event PriceDHUUpdate(uint256 topInteger, uint256 bottomInteger);
-    event StudentInfo(address studentAddress, string studentID, string firstName, string lastName);
+    event StudentInfo(address studentAddress, string studentID, string firstName, string lastName, uint gpa);
 
     
     // for price updates as a rational number
@@ -174,6 +176,13 @@ contract DHUCoin is StandardToken{
         string studentID;
         string firstName;
         string lastName;
+        uint gpa;
+    }
+    
+    // set which student can mine or not
+    modifier onlyAplicableStudent{
+        require(applicableStudents[msg.sender]);
+        _;
     }
     
     // grantVestedDHUContract and mainWallet can transfer to allow team allocations
@@ -198,7 +207,8 @@ contract DHUCoin is StandardToken{
     }
 
     modifier only_if_secondaryWallet{
-        if (msg.sender == secondaryWallet) _;
+        if (msg.sender == secondaryWallet)
+        _;
     }
     modifier require_waited{
         require(safeSub(now, priceUpdateWaitingTime) >= previousUpdateTime);
@@ -308,30 +318,36 @@ contract DHUCoin is StandardToken{
         }
         // icoDuration < 230,400 blocks = 40 days
         else if (icoDuration < 200 ){
-            bottomInteger = safeDiv(safeMul(currentPrice.bottomInteger, 110), 10e2);
+            bottomInteger = safeDiv(safeMul(currentPrice.bottomInteger, 110), 1e2);
             return bottomInteger;
         }
         else{
-            bottomInteger = safeDiv(safeMul(currentPrice.bottomInteger, 120), 10e2);
+            bottomInteger = safeDiv(safeMul(currentPrice.bottomInteger, 120), 1e2);
             return bottomInteger;
         }
     }
     
-    function addStudent(address _studentAddress, string _studentID, string _firstName, string _lastName) public onlyControllingWallets{
+    function addStudent(address _studentAddress, string _studentID, string _firstName, string _lastName, uint _gpa) public{
         verified[_studentAddress] = true;
         var student = students[_studentAddress];
         
         student.studentID = _studentID;
         student.firstName = _firstName;
         student.lastName = _lastName;
+        student.gpa = _gpa;
         
         studentsAccounts.push(_studentAddress) - 1;
+        
+        if (student.gpa >= safeDiv(5, 2)){
+        applicableStudents[_studentAddress] = true;
+        }
         emit Verification(_studentAddress);
-        emit StudentInfo(_studentAddress, _studentID, _firstName, _lastName);
+        emit StudentInfo(_studentAddress, _studentID, _firstName, _lastName, _gpa);
     }
     
     function removeStudent(address _studentAddress) public onlyControllingWallets{
         verified[_studentAddress] = false;
+        applicableStudents[_studentAddress] = false;
         uint index;
         for(uint i = 0; i < studentsAccounts.length; i ++){
             if(_studentAddress == studentsAccounts[i]){
@@ -350,8 +366,8 @@ contract DHUCoin is StandardToken{
         return studentsAccounts;
     }
     
-    function getOneStudent(address _address) view public returns (string, string, string) {
-        return (students[_address].studentID, students[_address].firstName, students[_address].lastName);
+    function getOneStudent(address _address) view public returns (string, string, string, uint) {
+        return (students[_address].studentID, students[_address].firstName, students[_address].lastName, students[_address].gpa);
     }
     
     function studentsNumber() view public returns (uint) {
@@ -603,7 +619,7 @@ contract DHUCoin is StandardToken{
     uint256 dx;
     uint256 dy;
         
-    function proofOfWorkOptimized(uint256 privKey) onlyVerified public {
+    function proofOfWorkOptimized(uint256 privKey) onlyVerified onlyAplicableStudent public {
         (qx, qy) = publicKey(privKey);
         (dx, dy) = deriveKey(privKey, qx, qy);
         
@@ -617,9 +633,9 @@ contract DHUCoin is StandardToken{
         bytes16 hashExp = bytes16(keccak256(privKey, currentChallenge));
         require(hashExp >= bytes16(difficulty));
         
-        uint256 timeSinceLastProof = (now - timeOfLastProof);                          // Calculate time since last reward was given
-        require(timeSinceLastProof >= 10 seconds);                                     // Rewards cannot be given too quickly
-        balances[msg.sender] += mintAmount * 1e18;                  // The reward to the winner grows by the minute
+        uint256 timeSinceLastProof = (now - timeOfLastProof);                   // Calculate time since last reward was given
+        require(timeSinceLastProof >= 10 seconds);                              // Rewards cannot be given too quickly
+        balances[msg.sender] += mintAmount * 1e18;                              // Student reward
 
         difficulty = difficulty * 10 minutes / timeSinceLastProof + 1;  // Adjusts the difficulty
 
