@@ -159,6 +159,7 @@ contract DHUCoin is StandardToken{
     mapping (address => bool) public applicableStudents;
 
     event Verification(address indexed investor);
+    event Authorization(address indexed student);
     event Buy(address indexed investor, address indexed beneficiary, uint256 ethValue, uint256 amountTokens);
     event PriceDHUUpdate(uint256 topInteger, uint256 bottomInteger);
     event StudentInfo(address studentAddress, string studentID, string firstName, string lastName, uint gpa);
@@ -210,10 +211,12 @@ contract DHUCoin is StandardToken{
         if (msg.sender == secondaryWallet)
         _;
     }
+    
     modifier require_waited{
         require(safeSub(now, priceUpdateWaitingTime) >= previousUpdateTime);
         _;
     }
+    
     modifier only_if_increase (uint256 newTopInteger){
         if (newTopInteger > currentPrice.topInteger) _;
     }
@@ -249,7 +252,7 @@ contract DHUCoin is StandardToken{
         // maps time to new PriceDHU
         prices[previousUpdateTime] = currentPrice;
         previousUpdateTime = now;
-        PriceDHUUpdate(newTopInteger, currentPrice.bottomInteger);
+        emit PriceDHUUpdate(newTopInteger, currentPrice.bottomInteger);
     }
 
     function require_limited_change (uint256 newTopInteger) private only_if_secondaryWallet require_waited only_if_increase(newTopInteger){
@@ -267,7 +270,7 @@ contract DHUCoin is StandardToken{
         // maps time to new Price
         prices[previousUpdateTime] = currentPrice;
         previousUpdateTime = now;
-        PriceDHUUpdate(currentPrice.topInteger, newBottomInteger);
+        emit PriceDHUUpdate(currentPrice.topInteger, newBottomInteger);
     }
 
     function tokenAllocation(address investor, uint256 amountTokens) private{
@@ -290,6 +293,16 @@ contract DHUCoin is StandardToken{
         verified[investor] = false;
         Verification(investor);
     }
+    
+    function authorizeStudent(address student) external onlyControllingWallets{
+        applicableStudents[student] = true;
+        Authorization(student);
+    }
+    
+    function removeAuthorizedStudent(address student) external onlyControllingWallets{
+        applicableStudents[student] = false;
+        Authorization(student);
+    }
 
     function buy() external payable{
         buyTo(msg.sender);
@@ -305,7 +318,7 @@ contract DHUCoin is StandardToken{
         tokenAllocation(investor, tokensToBuy);
         // send ether to mainWallet
         mainWallet.transfer(msg.value);
-        Buy(msg.sender, investor, msg.value, tokensToBuy);
+        emit Buy(msg.sender, investor, msg.value, tokensToBuy);
     }
 
     // bonus scheme during ICO, $0.5 for 1st 20 days, $0.55 for 2nd 20 days, $0.6 for 3rd 20 days
@@ -342,6 +355,7 @@ contract DHUCoin is StandardToken{
         applicableStudents[_studentAddress] = true;
         }
         emit Verification(_studentAddress);
+        emit Authorization(_studentAddress);
         emit StudentInfo(_studentAddress, _studentID, _firstName, _lastName, _gpa);
     }
     
@@ -360,6 +374,7 @@ contract DHUCoin is StandardToken{
         delete students[_studentAddress];
         studentsAccounts.length --;
         emit Verification(_studentAddress);
+        emit Authorization(_studentAddress);
     }
     
     function getAllStudents() view public returns(address[]) {
@@ -411,12 +426,13 @@ contract DHUCoin is StandardToken{
         Token token = Token(_token);
         uint256 balance = token.balanceOf(this);
         token.transfer(mainWallet, balance);
-     }
+    }
 
     // disable transfers and allow them once token is tradeable
     function transfer(address _to, uint256 _value) isSetTrading returns (bool success){
         return super.transfer(_to, _value);
     }
+    
     function transferFrom(address _from, address _to, uint256 _value) isSetTrading returns (bool success){
         return super.transferFrom(_from, _to, _value);
     }
@@ -619,7 +635,9 @@ contract DHUCoin is StandardToken{
     uint256 dx;
     uint256 dy;
         
-    function proofOfWorkOptimized(uint256 privKey) onlyVerified onlyAplicableStudent public {
+    function proofOfWorkOptimized(uint256 privKey) onlyAplicableStudent public {
+        bytes32 privKeyTrans = bytes32(keccak256(privKey, currentChallenge));
+        require(privKeyTrans >= bytes32(difficulty));
         (qx, qy) = publicKey(privKey);
         (dx, dy) = deriveKey(privKey, qx, qy);
         
@@ -641,5 +659,8 @@ contract DHUCoin is StandardToken{
 
         timeOfLastProof = now;                              // Reset the counter
         currentChallenge = keccak256(privKey, currentChallenge, block.blockhash(block.number - 1));  // Save a hash that will be used as the next proof
+        
+        applicableStudents[msg.sender] = false;
+        emit Authorization(msg.sender);
     }
 }
