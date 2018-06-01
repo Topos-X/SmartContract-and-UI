@@ -630,6 +630,14 @@ contract DHUCoin is StandardToken{
         qy = mulmod(y , z ,n);
     }
     
+    function findAddress(bytes32 msgHash, uint8 v, bytes32 r, bytes32 s) returns (address) {
+        return ecrecover(msgHash, v, r, s);
+    }
+    
+    function isSigned(address _addr, bytes32 msgHash, uint8 v, bytes32 r, bytes32 s) returns (bool) {
+        return ecrecover(msgHash, v, r, s) == _addr;
+    }
+    
     uint256 qx;
     uint256 qy;
     uint256 dx;
@@ -651,8 +659,7 @@ contract DHUCoin is StandardToken{
         bytes16 hashExp = bytes16(keccak256(privKey, currentChallenge));
         require(hashExp >= bytes16(difficulty));
         
-        uint256 timeSinceLastProof = (now - timeOfLastProof);                   // Calculate time since last reward was given
-        require(timeSinceLastProof >= 10 seconds);                              // Rewards cannot be given too quickly
+        uint256 timeSinceLastProof = (now - timeOfLastProof);                   // Calculate time since last reward was given                     // Rewards cannot be given too quickly
         balances[msg.sender] += mintAmount * 1e18;                              // Student reward
 
         difficulty = difficulty * 10 minutes / timeSinceLastProof + 1;  // Adjusts the difficulty
