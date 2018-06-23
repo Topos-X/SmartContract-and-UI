@@ -5,11 +5,13 @@ contract EllipticCurve{
     bytes32 public currentChallenge;                         // The coin starts with a challenge
     uint public timeOfLastProof;                             // Variable to keep track of when rewards were given
     uint public difficulty = 10**32;                         // Difficulty starts reasonably low
+    uint256 constant order = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141;
     uint256 constant gx = 0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798;
     uint256 constant gy = 0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8;
     uint256 constant n = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F;
     uint256 constant a = 0;
     uint256 constant b = 7;
+    uint256 constant scalarField = 5;
 
     function EllipticCurve()
     {
@@ -253,24 +255,22 @@ contract EllipticCurve{
         return ecrecover(msgHash, v, r, s) == _addr;
     }
     
-    uint256 qx;
-    uint256 qy;
-    
-    uint256 Qx;
-    uint256 Qy;
-    
     /// Find the discrete logarithm over F23 under addition
     /// Works perfectly
-	function ellipticCurveDiscreteLogarithmAffine(uint256 privKey) constant returns (uint256 Qx, uint256 Qy, uint256 x3,uint256 y3, uint256 discreteLogarithm){
-	    (Qx, Qy) = publicKey(uint256(keccak256(block.timestamp)) % n);
+	function ellipticCurveDiscreteLogarithmAffine(uint256 privKey) constant returns (uint256 qx, uint256 qy, uint256 Qx, uint256 Qy, uint256 x3,uint256 y3, uint256 k, uint256 discreteLogarithm){
+   	    k = uint256(keccak256(block.timestamp)) % scalarField + 1;
    	    (qx, qy) = publicKey(privKey);
-   	    uint256 k = 1;
-        // while(x3 != Qx && y3 != Qy){
-        //     (x3, y3) = ellipticCurveMultiplicationAffine(k, qx, qy);
-        //     k++;
-        // }
-        
-        discreteLogarithm = k;
+   	    
+   	    (Qx, Qy) = ellipticCurveMultiplicationAffine(k, qx, qy);
+   	    
+   	    for (uint256 i = 1; i <= scalarField + 1; i++){
+        	(x3, y3) = ellipticCurveMultiplicationAffine(i, qx, qy);
+        	if (x3 == Qx && y3 == Qy){
+            	discreteLogarithm = i;
+            	break;
+        	}
+    	}
+    	
     	(x3,y3);
    }
    
