@@ -129,9 +129,9 @@ contract DHUCoin is StandardToken{
     address public secondaryWallet;
     
     // time to wait between secondaryWallet price updates, mainWallet can update without restrictions
-    uint256 public priceUpdateWaitingTime = 1 hours;
+    //uint256 public priceUpdateWaitingTime = 1 hours;
 
-    uint256 public previousUpdateTime = 0;
+    //uint256 public previousUpdateTime = 0;
     
     // strucure of price
     PriceDHU public currentPrice;
@@ -212,10 +212,10 @@ contract DHUCoin is StandardToken{
         _;
     }
     
-    modifier require_waited{
-        require(safeSub(now, priceUpdateWaitingTime) >= previousUpdateTime);
-        _;
-    }
+    // modifier require_waited{
+    //     require(safeSub(now, priceUpdateWaitingTime) >= previousUpdateTime);
+    //     _;
+    // }
     
     modifier only_if_increase (uint256 newTopInteger){
         if (newTopInteger > currentPrice.topInteger) _;
@@ -235,7 +235,7 @@ contract DHUCoin is StandardToken{
         icoStartBlock = startBlockInput;
         // icoEndBlock = icoStartBlock + 345,600 blocks
         icoEndBlock = endBlockInput;
-        previousUpdateTime = now;
+        //previousUpdateTime = now;
     }
 
     function setGrantVestedDHUContract(address grantVestedDHUContractInput) external onlyMainWallet{
@@ -250,12 +250,12 @@ contract DHUCoin is StandardToken{
         require_limited_change(newTopInteger);
         currentPrice.topInteger = newTopInteger;
         // maps time to new PriceDHU
-        prices[previousUpdateTime] = currentPrice;
-        previousUpdateTime = now;
+        //prices[previousUpdateTime] = currentPrice;
+        //previousUpdateTime = now;
         emit PriceDHUUpdate(newTopInteger, currentPrice.bottomInteger);
     }
 
-    function require_limited_change (uint256 newTopInteger) private only_if_secondaryWallet require_waited only_if_increase(newTopInteger){
+    function require_limited_change (uint256 newTopInteger) private only_if_secondaryWallet only_if_increase(newTopInteger){
         uint256 percentage_diff = 0;
         percentage_diff = safeDiv(safeMul(newTopInteger, 100), currentPrice.topInteger);
         percentage_diff = safeSub(percentage_diff, 100);
@@ -268,8 +268,8 @@ contract DHUCoin is StandardToken{
         require(newBottomInteger > 0);
         currentPrice.bottomInteger = newBottomInteger;
         // maps time to new Price
-        prices[previousUpdateTime] = currentPrice;
-        previousUpdateTime = now;
+        //prices[previousUpdateTime] = currentPrice;
+        //previousUpdateTime = now;
         emit PriceDHUUpdate(currentPrice.topInteger, newBottomInteger);
     }
 
@@ -402,9 +402,9 @@ contract DHUCoin is StandardToken{
         icoEndBlock = newIcoEndBlock;
     }
 
-    function changePriceUpdateWaitingTime(uint256 newPriceUpdateWaitingTime) external onlyMainWallet{
-        priceUpdateWaitingTime = newPriceUpdateWaitingTime;
-    }
+    // function changePriceUpdateWaitingTime(uint256 newPriceUpdateWaitingTime) external onlyMainWallet{
+    //     priceUpdateWaitingTime = newPriceUpdateWaitingTime;
+    // }
 
     function changeMainWallet(address newMainWallet) external onlyMainWallet{
         require(newMainWallet != address(0));
