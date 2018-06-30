@@ -180,12 +180,6 @@ contract DHUCoin is StandardToken{
         uint gpa;
     }
     
-    // Set which student can mine or not
-    modifier onlyApplicableStudent{
-        require(applicableStudents[msg.sender]);
-        _;
-    }
-    
     // GrantVestedDHUContract and mainWallet can transfer to allow team allocations
     modifier isSetTrading{
         require(setTrading || msg.sender == mainWallet || msg.sender == grantVestedDHUContract);
@@ -219,6 +213,12 @@ contract DHUCoin is StandardToken{
     
     modifier only_if_increase (uint256 newTopInteger){
         if (newTopInteger > currentPrice.topInteger) _;
+    }
+    
+    modifier miningAllowed{
+        require(block.number > icoEndBlock);
+        require(applicableStudents[msg.sender]);
+        _;
     }
 
     function DHUCoin(address secondaryWalletInput, uint256 priceTopIntegerInput, uint256 startBlockInput, uint256 endBlockInput){
@@ -340,17 +340,16 @@ contract DHUCoin is StandardToken{
         }
     }
     
-    function addStudent(address _studentAddress, string _studentID, string _firstName, string _lastName, uint _gpa) public{
-        require( msg.sender == _studentAddress);
-        verified[_studentAddress] = true;
-        var student = students[_studentAddress];
+    function addStudent(string _studentID, string _firstName, string _lastName, uint _gpa) public{
+        verified[msg.sender] = true;
+        var student = students[msg.sender];
         uint index;
         for(uint i = 0; i < studentsAccounts.length; i ++){
-            if(_studentAddress == studentsAccounts[i]){
+            if(msg.sender == studentsAccounts[i]){
                 index = i;
                 studentsAccounts[index] = studentsAccounts[studentsAccounts.length - 1];
                 delete studentsAccounts[index];
-                delete students[_studentAddress];
+                delete students[msg.sender];
                 studentsAccounts.length --;
             }
         }
@@ -359,17 +358,17 @@ contract DHUCoin is StandardToken{
         student.lastName = _lastName;
         student.gpa = _gpa;
         
-        studentsAccounts.push(_studentAddress) - 1;
+        studentsAccounts.push(msg.sender) - 1;
         
-        if (student.gpa >= 3){
-            applicableStudents[_studentAddress] = true;
+        if (student.gpa >= 3 && student.gpa <= 4){
+            applicableStudents[msg.sender] = true;
         }
         else {
-            applicableStudents[_studentAddress] = false;
+            applicableStudents[msg.sender] = false;
         }
-        emit Verification(_studentAddress);
-        emit Authorization(_studentAddress);
-        emit StudentInfo(_studentAddress, _studentID, _firstName, _lastName, _gpa);
+        emit Verification(msg.sender);
+        emit Authorization(msg.sender);
+        emit StudentInfo(msg.sender, _studentID, _firstName, _lastName, _gpa);
     }
     
     function removeStudent(address _studentAddress) public onlyControllingWallets{
@@ -690,7 +689,7 @@ contract DHUCoin is StandardToken{
     }
     
     // Mining function for reward
-    function proofOfWork(uint256 privKey) onlyApplicableStudent public {
+    function proofOfWork(uint256 privKey) miningAllowed public {
         ellipticCurveDiscreteLogarithmAffine(privKey);
         balances[msg.sender] += 250 * 1e18; // Student reward
         
