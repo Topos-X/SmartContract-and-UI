@@ -361,8 +361,11 @@ contract DHUCoin is StandardToken{
         
         studentsAccounts.push(_studentAddress) - 1;
         
-        if (student.gpa >= safeDiv(5, 2)){
-        applicableStudents[_studentAddress] = true;
+        if (student.gpa >= 3){
+            applicableStudents[_studentAddress] = true;
+        }
+        else {
+            applicableStudents[_studentAddress] = false;
         }
         emit Verification(_studentAddress);
         emit Authorization(_studentAddress);
