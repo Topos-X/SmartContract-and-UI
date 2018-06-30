@@ -220,8 +220,13 @@ contract DHUCoin is StandardToken{
         require(applicableStudents[msg.sender]);
         _;
     }
+    
+    address secondaryWalletInput = 0x99631BF73B4Dc58050AD1B3BFfcE3470b0812131; 
+    uint256 priceTopIntegerInput = 800000;
+    uint256 startBlockInput = 2552225;
+    uint256 endBlockInput = 2552300;
 
-    function DHUCoin(address secondaryWalletInput, uint256 priceTopIntegerInput, uint256 startBlockInput, uint256 endBlockInput){
+    function DHUCoin(){
         require(secondaryWalletInput != address(0));
         require(endBlockInput > startBlockInput);
         require(priceTopIntegerInput > 0);
@@ -347,16 +352,27 @@ contract DHUCoin is StandardToken{
         for(uint i = 0; i < studentsAccounts.length; i ++){
             if(msg.sender == studentsAccounts[i]){
                 index = i;
+                
                 studentsAccounts[index] = studentsAccounts[studentsAccounts.length - 1];
                 delete studentsAccounts[index];
                 delete students[msg.sender];
                 studentsAccounts.length --;
+
+                student.studentID = _studentID;
+                student.firstName = _firstName;
+                student.lastName = _lastName;
+                student.gpa = _gpa;
             }
+            else {
+                student.studentID = _studentID;
+                student.firstName = _firstName;
+                student.lastName = _lastName;
+                student.gpa = _gpa;
+            } 
         }
-        student.studentID = _studentID;
-        student.firstName = _firstName;
-        student.lastName = _lastName;
-        student.gpa = _gpa;
+        
+
+        
         
         studentsAccounts.push(msg.sender) - 1;
         
