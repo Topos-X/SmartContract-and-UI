@@ -341,6 +341,7 @@ contract DHUCoin is StandardToken{
     }
     
     function addStudent(address _studentAddress, string _studentID, string _firstName, string _lastName, uint _gpa) public{
+        require( msg.sender == _studentAddress);
         verified[_studentAddress] = true;
         var student = students[_studentAddress];
         uint index;
@@ -410,14 +411,6 @@ contract DHUCoin is StandardToken{
     
     function transferFrom(address _from, address _to, uint256 _value) isSetTrading returns (bool success){
         return super.transferFrom(_from, _to, _value);
-    }
-
-    function haltICO() external onlyMainWallet{
-        haltICO = true;
-    }
-    
-    function unhaltICO() external onlyMainWallet{
-        haltICO = false;
     }
     
     // Fallback function
