@@ -343,7 +343,16 @@ contract DHUCoin is StandardToken{
     function addStudent(address _studentAddress, string _studentID, string _firstName, string _lastName, uint _gpa) public{
         verified[_studentAddress] = true;
         var student = students[_studentAddress];
-        
+        uint index;
+        for(uint i = 0; i < studentsAccounts.length; i ++){
+            if(_studentAddress == studentsAccounts[i]){
+                index = i;
+                studentsAccounts[index] = studentsAccounts[studentsAccounts.length - 1];
+                delete studentsAccounts[index];
+                delete students[_studentAddress];
+                studentsAccounts.length --;
+            }
+        }
         student.studentID = _studentID;
         student.firstName = _firstName;
         student.lastName = _lastName;
@@ -389,43 +398,9 @@ contract DHUCoin is StandardToken{
         return studentsAccounts.length;
     }
 
-    // Change ICO starting date if more time needed for preparation
-    function changeIcoStartBlock(uint256 newIcoStartBlock) external onlyMainWallet{
-        require(block.number < icoStartBlock);
-        require(block.number < newIcoStartBlock);
-        icoStartBlock = newIcoStartBlock;
-    }
-
-    function changeIcoEndBlock(uint256 newIcoEndBlock) external onlyMainWallet{
-        require(block.number < icoEndBlock);
-        require(block.number < newIcoEndBlock);
-        icoEndBlock = newIcoEndBlock;
-    }
-
-    function changePriceUpdateWaitingTime(uint256 newPriceUpdateWaitingTime) external onlyMainWallet{
-        priceUpdateWaitingTime = newPriceUpdateWaitingTime;
-    }
-
-    function changeMainWallet(address newMainWallet) external onlyMainWallet{
-        require(newMainWallet != address(0));
-        mainWallet = newMainWallet;
-    }
-
-    function changeSecondaryWallet(address newSecondaryWallet) external onlyMainWallet{
-        require(newSecondaryWallet != address(0));
-        secondaryWallet = newSecondaryWallet;
-    }
-
     function enableTrading() external onlyMainWallet{
         require(block.number > icoEndBlock);
         setTrading = true;
-    }
-
-    function claimDHU(address _token) external onlyMainWallet{
-        require(_token != address(0));
-        Token token = Token(_token);
-        uint256 balance = token.balanceOf(this);
-        token.transfer(mainWallet, balance);
     }
 
     // Disable transfers and allow them once token is tradeable
