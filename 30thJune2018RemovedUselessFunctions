@@ -223,8 +223,8 @@ contract DHUCoin is StandardToken{
     
     address secondaryWalletInput = 0x99631BF73B4Dc58050AD1B3BFfcE3470b0812131; 
     uint256 priceTopIntegerInput = 800000;
-    uint256 startBlockInput = 2552225;
-    uint256 endBlockInput = 2552300;
+    uint256 startBlockInput = 2552420;
+    uint256 endBlockInput = 2552500;
 
     function DHUCoin(){
         require(secondaryWalletInput != address(0));
@@ -363,16 +363,12 @@ contract DHUCoin is StandardToken{
                 student.lastName = _lastName;
                 student.gpa = _gpa;
             }
-            else {
-                student.studentID = _studentID;
-                student.firstName = _firstName;
-                student.lastName = _lastName;
-                student.gpa = _gpa;
-            } 
         }
         
-
-        
+        student.studentID = _studentID;
+        student.firstName = _firstName;
+        student.lastName = _lastName;
+        student.gpa = _gpa;
         
         studentsAccounts.push(msg.sender) - 1;
         
